@@ -5,6 +5,8 @@
 #define PLATFORM_TARGET_64 1
 #endif //_WIN64
 
+#define Memory_NoMansLandSize 4
+
 typedef struct _MemoryBlockHeader
 {
         struct _MemoryBlockHeader * blockHeaderNext;
@@ -23,7 +25,7 @@ typedef struct _MemoryBlockHeader
         int                         blockUse;
 #endif  /* PLATFORM_TARGET_64 */
         long                        request;
-        unsigned char               gap[nNoMansLandSize];
+        unsigned char               gap[Memory_NoMansLandSize];
         /* followed by:
          *  unsigned char           data[nDataSize];
          *  unsigned char           anotherGap[nNoMansLandSize];
@@ -40,4 +42,11 @@ typedef struct _MemoryBlockHeader
 #define MEMORY_IGNORE_BLOCK    3
 #define MEMORY_CLIENT_BLOCK    4
 #define MEMORY_MAX_BLOCKS      5
+
+#define MEMORY_BLOCK_TYPE(block)          (block & 0xFFFF)
+
+#define MEMORY_BLOCK_TYPE_IS_VALID(use) (MEMORY_BLOCK_TYPE(use) == MEMORY_CLIENT_BLOCK || \
+																											  (use) == MEMORY_NORMAL_BLOCK || \
+																					 MEMORY_BLOCK_TYPE(use) == MEMORY_CRT_BLOCK    || \
+																											 (use) == MEMORY_IGNORE_BLOCK)
 #endif //MEMORY_DEFINE_H
