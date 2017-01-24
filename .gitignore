@@ -84,3 +84,4 @@ Device-Release/
 /deps/gtest/libraries
 /build/gyp
 
+/build/proj.win/MemoryTrace.VC.VC.opendb

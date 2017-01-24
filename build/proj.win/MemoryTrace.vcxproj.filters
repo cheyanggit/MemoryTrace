@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\src\memory_tracer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\memory_tracer_x.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +45,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\memory_tracer.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\memory_tracer_x.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
