@@ -24,12 +24,16 @@ int main()
 	char* p = (char*)malloc(6);
 	memmove(p, "test", 5);
 
-	free(p);
+
 
 	A* a = new A();
 	a->ma();
 
+	dump_memory_info();
+	report_memory_info(NULL);
 	//a->~A();
+
+	free(p);
 	delete a;
 
     return 0;

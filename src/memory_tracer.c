@@ -358,18 +358,19 @@ int check_memory()
 {
 	int allOkay;
 	MemoryBlockHeader* head;
+	unsigned char* blockUse;
+	int okay;
 
 #if defined(_WIN32)
 	init_mutex_handle();
 #endif
 
 	MUTEX_LOCK(sMutexHandle);
-
 	allOkay = 1;
 	for (head = sFirstBlock; head != NULL; head = head->blockHeaderNext)
 	{
-		int okay = 1;
-		unsigned char* blockUse;
+		okay = 1;
+		
 		if (MEMORY_BLOCK_TYPE_IS_VALID(head->blockUse))
 		{
 			blockUse = (unsigned char*)sBlockUseName[MEMORY_BLOCK_TYPE(head->blockUse)];
@@ -476,6 +477,67 @@ int check_memory()
 	MUTEX_UNLOCK(sMutexHandle);
 
 	return allOkay;
+}
+
+void dump_memory_info()
+{
+	MemoryBlockHeader* head;
+//#if defined(_WIN32)
+//	init_mutex_handle();
+//#endif
+	//MUTEX_LOCK(sMutexHandle);
+
+	printf("%s\n", "Memory Trace Info");
+	printf("%s\n", "-----------------------------------------------------------");
+
+	for (head = sFirstBlock; head != NULL; head = head->blockHeaderNext)
+	{
+		if (head->fileName != NULL)
+		{
+			printf("%s(%d) : ", head->fileName, head->line);
+		}
+
+		printf("block at 0x%p,subtype %x,%Iu bytes long.\n", Memory_GetDataPtr(head), head->blockUse, head->dataSize);
+	}
+
+	//MUTEX_UNLOCK(sMutexHandle);
+}
+
+void report_memory_info(const char* out_file)
+{
+	MemoryBlockHeader* head;
+	char info[2048];
+
+	FILE* fp_write = fopen(out_file?out_file:OUTPUT_FILE,"wt");
+	
+#if defined(_WIN32)
+	init_mutex_handle();
+#endif
+	
+	MUTEX_LOCK(sMutexHandle);
+
+	sprintf(info, "%s\n", "Memory Trace Info");
+	fwrite(info, strlen(info), 1, fp_write);
+
+	sprintf(info, "%s\n", "-----------------------------------------------------------");
+	fwrite(info, strlen(info), 1, fp_write);
+
+	for (head = sFirstBlock; head != NULL; head = head->blockHeaderNext)
+	{
+		if (head->fileName != NULL)
+		{
+			sprintf(info, "%s(%d) : ",head->fileName,head->line);
+			fwrite(info, strlen(info), 1, fp_write);
+		}
+		
+		sprintf(info, "block at 0x%p,subtype %x,%Iu bytes long.\n", Memory_GetDataPtr(head),head->blockUse,head->dataSize);
+		fwrite(info, strlen(info), 1, fp_write);
+	}
+
+	fflush(fp_write);
+	fclose(fp_write);
+
+	MUTEX_UNLOCK(sMutexHandle);
 }
 
 #endif //MEMORY_TRACER_H

@@ -16,6 +16,14 @@ void  operator delete(void* ptr)
 	yh_free(ptr, MEMORY_NORMAL_BLOCK);
 }
 
+void  operator delete(void* ptr,
+	int blockType,
+	const char * fileName,
+	int line)
+{
+	yh_free(ptr, blockType);
+}
+
 void * operator new[](
 	size_t size,
 	int blockType,
@@ -29,4 +37,14 @@ void * operator new[](
 void  operator delete[](void* ptr)
 {
 	yh_free(ptr, MEMORY_NORMAL_BLOCK);
+}
+
+void  operator delete[](
+	void* ptr,
+	int blockType,
+	const char * fileName,
+	int line
+	)
+{
+	yh_free(ptr, blockType);
 }
